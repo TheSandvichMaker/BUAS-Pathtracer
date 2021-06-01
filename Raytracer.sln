@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30413.136
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Raytracer", "Raytracer.vcxproj", "{F5796E5C-B800-47CD-AA07-A1BD5BF5D8EF}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MathLib", "..\MathLib\MathLib.vcxproj", "{C0F0973E-6942-4319-9379-11A49475042B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTests", "..\UnitTests\UnitTests.vcxproj", "{53632017-6471-4B39-8869-2D16FE6F6A1B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F5796E5C-B800-47CD-AA07-A1BD5BF5D8EF}.Debug|x64.ActiveCfg = Debug|x64
+		{F5796E5C-B800-47CD-AA07-A1BD5BF5D8EF}.Debug|x64.Build.0 = Debug|x64
+		{F5796E5C-B800-47CD-AA07-A1BD5BF5D8EF}.Release|x64.ActiveCfg = Release|x64
+		{F5796E5C-B800-47CD-AA07-A1BD5BF5D8EF}.Release|x64.Build.0 = Release|x64
+		{C0F0973E-6942-4319-9379-11A49475042B}.Debug|x64.ActiveCfg = Debug|x64
+		{C0F0973E-6942-4319-9379-11A49475042B}.Debug|x64.Build.0 = Debug|x64
+		{C0F0973E-6942-4319-9379-11A49475042B}.Release|x64.ActiveCfg = Release|x64
+		{C0F0973E-6942-4319-9379-11A49475042B}.Release|x64.Build.0 = Release|x64
+		{53632017-6471-4B39-8869-2D16FE6F6A1B}.Debug|x64.ActiveCfg = Debug|x64
+		{53632017-6471-4B39-8869-2D16FE6F6A1B}.Debug|x64.Build.0 = Debug|x64
+		{53632017-6471-4B39-8869-2D16FE6F6A1B}.Release|x64.ActiveCfg = Release|x64
+		{53632017-6471-4B39-8869-2D16FE6F6A1B}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {859A359D-1990-4F51-BFB3-C178F1574947}
+	EndGlobalSection
+EndGlobal
