@@ -30,12 +30,12 @@ partition_objects(u32 entry_count, BVHSortEntry* entries, f32 split_p, u32 split
     for (;;) {
         do {
             ++i;
-            assert_slow(i < entry_count);
+            // assert_slow(i < entry_count);
         } while (entries[i].bv_p.e[split_axis] < split_p);
 
         do {
             --j;
-            assert_slow(j >= 0);
+            // assert_slow(j >= 0);
         } while (entries[j].bv_p.e[split_axis] > split_p);
 
         if (i >= j) {

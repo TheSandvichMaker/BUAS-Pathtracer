@@ -1059,7 +1059,7 @@ SCENE_DESCRIPTION(week_7_nicer_scene) {
         .metallic = 1.0f,
     });
 
-    // scene->skydome = load_environment_map(&scene->arena, temp_arena, "data/boiler_room_4k.hdr");
+    // scene->skydome = load_environment_map(&scene->arena, temp_arena, "data/boiler_room_2k.hdr");
 
     add_plane(scene, ground_material, v3(0, 1, 0), 0.0f);
     add_sphere(scene, sphere_material, 1.0f, transform_translate(v3(0, 1.0f, 0)));
@@ -1199,7 +1199,7 @@ SCENE_DESCRIPTION(dragon_scene) {
     MaterialID  blue_light_material = add_emissive_material(scene, 3.0f*v3(2.0f, 6.0f, 10.0f));
     MaterialID green_light_material = add_emissive_material(scene, 3.0f*v3(1.0f, 10.0f, 2.0f));
 
-    scene->skydome = load_environment_map(&scene->arena, temp_arena, "data/ballroom_4k.hdr");
+    scene->skydome = load_environment_map(&scene->arena, temp_arena, "data/ballroom_2k.hdr");
 
     Mesh dragon = load_mesh(scene, "data/dragon_mcguire.obj", temp_arena);
     if (dragon.triangle_count) {
@@ -1237,7 +1237,7 @@ SCENE_DESCRIPTION(platforms_scene) {
     settings->lens_distortion = 2.0f;
     settings->caustics        = false;
 
-    scene->skydome = load_environment_map(&scene->arena, temp_arena, "data/boiler_room_4k.hdr");
+    scene->skydome = load_environment_map(&scene->arena, temp_arena, "data/boiler_room_2k.hdr");
 
     MaterialID ground_material = add_diffuse_material(scene, v3(0.8f, 0.1f, 0.1f), 1.0f, 0.0f, true, v3(0.8f, 0.8f, 0.1f));
     MaterialID marble_material = add_translucent_material(scene, v3(0.5f, 0.25f, 0.0f), 1.5f);
@@ -1346,18 +1346,79 @@ SCENE_DESCRIPTION(platforms_scene) {
     add_sphere(scene,  green_light_material, 0.25f, transform_translate(v3( 0.0f, 20.0f,  0.0f)));
 }
 
+static 
+SCENE_DESCRIPTION(nested_dielectrics_scene) {
+    camera->vfov = DEG_TO_RAD*40.0f;
+    camera->aspect_ratio = (f32)w / (f32)h;
+    camera->lens_radius = 6.0f;
+
+    camera->p = v3(-25, 6, 0);
+    aim_camera_at(camera, v3(1, 5, 0));
+
+    MaterialID clear_marble_material = add_translucent_material(scene, v3(0.0f, 0.0f, 0.0f), 1.5f);
+    MaterialID blue_marble_material  = add_translucent_material(scene, v3(0.6f, 0.3f, 0.0f), 1.5f);
+    MaterialID air_material    = add_translucent_material(scene, v3(0.0f, 0.0f, 0.0f), 1.0f);
+    MaterialID ground_material = add_diffuse_material(scene, v3(0.55f, 0.55f, 0.55f), 1.0f, 0.0f, true);
+
+    MaterialID white_light_material = add_emissive_material(scene, 8.0f*v3(10.0f, 10.0f, 9.0f));
+
+    scene->skydome = load_environment_map(&scene->arena, temp_arena, "data/epping_forest_02_2k.hdr");
+
+    add_box(scene, ground_material, v3(10, 1, 10), transform_translate(v3(0, 1.0f, 0)));
+    add_box(scene, ground_material, v3(40, 1, 40), transform_translate(v3(8.0f, -1.0f, 0)));
+
+    float floor_height = 2.0f;
+
+    RandomSeries entropy = random_seed(SDL_GetTicks());
+    uint32_t marble_count = random_range(&entropy, 20, 40);
+
+    for (size_t marble_index = 0; marble_index < marble_count; marble_index++)
+    {
+        V3 absorption = v3(0.25f) + 0.75f*random_unilaterals(&entropy).xyz;
+		MaterialID marble_material = add_translucent_material(scene, absorption, 1.5f);
+
+        V2 marble_xy = 8.0f*random_bilaterals(&entropy).xy;
+		float marble_radius = 0.6f + random_unilaterals(&entropy).x;
+
+		V3 marble_p = v3(marble_xy.x, floor_height + marble_radius, marble_xy.y);
+		add_sphere(scene, marble_material, marble_radius, transform_translate(marble_p));
+
+		uint32_t bubble_count = random_range(&entropy, 5, 12);
+
+		float min_bubble_radius = 0.05f;
+		float max_bubble_radius = 0.15f;
+
+		for (size_t i = 0; i < bubble_count; i++)
+		{
+			V4 r1 = random_bilaterals(&entropy);
+
+			float bubble_radius = min_bubble_radius + remap(r1.w, -1.0f, 1.0f)*max_bubble_radius;
+			float bubble_max_offset_from_center = marble_radius - bubble_radius - 0.05f;
+			float bubble_offset = bubble_max_offset_from_center*random_unilaterals(&entropy).x;
+
+			V3 bubble_p = marble_p + bubble_offset*r1.xyz;
+
+			add_sphere(scene, ground_material, bubble_radius, transform_translate(bubble_p));
+		}
+    }
+
+    // NOTE: Lights
+    add_sphere(scene, white_light_material, 2, transform_translate(v3(0.0f, 15.0f, 12)));
+}
+
 static SceneDescription g_scenes[] = {
-    { "Dragon",             dragon_scene       },
-    { "Cornell Box",        cornell_box_scene  },
-    { "Floating Platforms", platforms_scene    },
-    { "Week 1",             week_1_scene       },
-    { "Week 2",             week_2_scene       },
-    { "Week 3",             week_3_scene       },
-    { "Week 4",             week_4_scene       },
-    { "Week 5",             week_5_scene       },
-    { "Week 6",             week_6_scene       },
-    { "Week 7",             week_7_scene       },
-    { "Week 7, Nicer",      week_7_nicer_scene },
+    { "Dragon",             dragon_scene             },
+    { "Cornell Box",        cornell_box_scene        },
+    { "Floating Platforms", platforms_scene          },
+    { "Nested Dielectrics", nested_dielectrics_scene },
+    { "Week 1",             week_1_scene             },
+    { "Week 2",             week_2_scene             },
+    { "Week 3",             week_3_scene             },
+    { "Week 4",             week_4_scene             },
+    { "Week 5",             week_5_scene             },
+    { "Week 6",             week_6_scene             },
+    { "Week 7",             week_7_scene             },
+    { "Week 7, Nicer",      week_7_nicer_scene       },
 };
 
 static void
@@ -1578,7 +1639,7 @@ SDL_main(int argument_count, char** arguments) {
     //
 
     Scene scene = {};
-    load_scene(&scene, &g_scenes[0], w, h, &transient_arena);
+    load_scene(&scene, &g_scenes[3], w, h, &transient_arena);
 
     Camera* camera = &scene.new_camera;
     SceneSettings* settings = &scene.new_settings;
