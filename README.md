@@ -8,7 +8,7 @@
 ![Raytracer_LdgeBg9c2O](https://user-images.githubusercontent.com/49493579/213305512-b4f7cb0e-5b0d-49da-8849-7f123480283f.png)
 
 # Description
-A CPU pathtracer written as my second project in my first year at the Breda University of Applied Sciences' games programming course over the course of 8 weeks.
+This is a CPU pathtracer written as my second project in my first year at the Breda University of Applied Sciences' games programming course over the course of 8 weeks. Built using Visual Studio, .sln file is in the Raytracer folder. 
 
 # Features
 - Realtime preview with camera controls and configuration
